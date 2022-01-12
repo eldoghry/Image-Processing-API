@@ -7,7 +7,7 @@
     "prettier": "prettier --config .prettierrc.json {,!(node_modules)/**/}*.ts --write",
     "lint": "eslint . --ext .ts",
     "build": "tsc",
-    "start": "nodemon src/index.tsc"
+    "start": "npx nodemon src/index.ts"
   },
   "author": "Mohamed Magdy",
   "license": "ISC",
