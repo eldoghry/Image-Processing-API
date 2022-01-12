@@ -1,35 +1,42 @@
 import express from 'express';
-import loggerMiddleware from './middlewares/loggerMiddleware'
+
+//importing middlewares
+import queryExist from './middlewares/queryExist';
+import queryValid from './middlewares/queryValid';
+// import logger from './middlewares/logger'
 
 const app = express();
 const port = 4000;
+const middlewares = [queryExist, queryValid];
 
-app.use(loggerMiddleware)
-
+// app.use(logger)
+//http://localhost:4000/api/image?filename=image.jpg&width=200&height=100
 
 //main endpoint
 app.get('/', (req, res) => {
-  res.send('Welcome To Image Processing API');
+  res.status(200).send('Welcome To Image Processing API');
 });
 
-
-app.get('/api/image', (req, res) => {
+app.get(
+  '/api/image',
+  middlewares,
+  (req: express.Request, res: express.Response) => {
     //1) check if the query is correct ?
-    //2) no: reject response with 404 
-    //3) yes: check if their are already converted images with same query ? 
+    //2) no: reject response with 404
+    //3) yes: check if their are already converted images with same query ?
     //4) yes return the img
-    //5) no: create new image, save it in thumbs, response 
-    res.send('Welcome To Image Processing API');
-});
-  
+    //5) no: create new image, save it in thumbs, response
 
-//handling unkown endpoints  
+    // res.statusCode = 200
+    res.status(200).send('Image processing');
+  }
+);
+
+//handling unknown endpoints
 app.get('*', (req, res) => {
-    console.log('wrong route');
-    res.statusCode = 404
-    res.send(`Wrong Endpoint - ${req.originalUrl}`);
+  res.status(404).send(`Endpoint Not Found: ${req.originalUrl}`);
 });
-  
+
 app.listen(port, () => {
   console.log(`Listening from http://localhost:${port}/`);
 });
