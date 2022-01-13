@@ -1,27 +1,25 @@
 import express from 'express';
 
 //importing middlewares
-import queryExist from './middlewares/queryExist';
-import queryValid from './middlewares/queryValid';
 import fs from 'fs';
 // import logger from './middlewares/logger'
 
 //Importing Modules
-import resizeImage from './modules/resizeImage';
+import createImage from './modules/createImage';
 import replaceTemplate from './modules/replaceTemplate';
 import path from 'path';
+import isValidQuery from './middlewares/isValidQuery';
+import isNewImage from './middlewares/isNewImage';
+import createImageMiddleware from './middlewares/createImageMiddleware';
 
 const app = express();
 const port = 4000;
-// const middlewares = [queryExist, queryValid];
-const middlewares = [queryExist];
+const middlewares = [isValidQuery, isNewImage, createImageMiddleware];
 
 //read template markup once when server is up
 const markup = fs.readFileSync(`${__dirname}/../templates/template.html`, 'utf-8');
-// console.log(markup);
 
 // app.use(logger)
-//http://localhost:4000/api/image?filename=image.jpg&width=200&height=100
 
 //main endpoint
 app.get('/', (req, res) => {
@@ -34,18 +32,10 @@ app.get('/api/image', middlewares, (req: express.Request, res: express.Response)
   //3) yes: check if their are already converted images with same query ?
   //4) yes return the img
   //5) no: create new image, save it in thumbs, response
-
-  // res.statusCode = 200
-
-  const { filename, width, height } = req.query;
-  resizeImage({
-    filename: `${filename as unknown as string}.jpg`,
-    width: +(width as unknown as number),
-    height: +(height as unknown as number),
-  });
-
+  // createImage(req);
   // res.status(200).send('Image processing');
-  res.status(200).send(replaceTemplate('newfile', `http://localhost:4000/assets/${filename}.jpg`, markup));
+  // res.status(200).send(replaceTemplate('newfile', `http://localhost:4000/assets/${filename}.jpg`, markup));
+  // res.status(200).send('create new image');
 });
 
 app.get('/assets/:filename', (req, res) => {
