@@ -10,7 +10,6 @@ const queryExist = function (
   // TODO: height is madatory ?
 
   const img = req.query; //{ filename:'image.jpg', width:'200', height:'200'}
-  console.log(req.query);
 
   if (img.filename && img.width && img.height) next();
   else res.status(400).send('BAD REQUEST: Check Endpoint Queries');
