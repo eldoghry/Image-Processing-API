@@ -19,8 +19,6 @@ const middlewares = [isValidQuery, isNewImage, createImageMiddleware];
 //read template markup once when server is up
 const markup = fs.readFileSync(`${__dirname}/../templates/template.html`, 'utf-8');
 
-// app.use(logger)
-
 //main endpoint
 app.get('/', (req, res) => {
   res.status(200).send('Welcome To Image Processing API');

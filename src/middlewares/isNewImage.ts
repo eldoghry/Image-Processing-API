@@ -15,10 +15,10 @@ const isNewImage = async function (
     const file = await fsPromises.open(`./assets/thumbs/${req.image?.path}`, 'r');
     file.close();
     req.image!.isExist = true;
-    console.log(req.image);
-
     const filePath = path.resolve(__dirname, `../../assets/thumbs/${req.image?.path}`);
     // res.status(200).send('file exist');
+
+    console.log('Return existing image');
     res.status(200).sendFile(filePath);
   } catch (error) {
     //not found ? create new, else send

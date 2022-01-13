@@ -1,11 +1,11 @@
-import sharp, { AvailableFormatInfo, FormatEnum } from 'sharp';
+import sharp, { AvailableFormatInfo, FormatEnum, Sharp } from 'sharp';
 import { promises as fsPromises } from 'fs';
 import express from 'express';
 
 //TODO: check assets, full, thumbs dir first
 // TODO: search resize file first
 
-const createImage = async (req: express.Request) => {
+const createImage = async (req: express.Request): Promise<void> => {
   try {
     //read original file from full path
     const readingfile = await fsPromises.readFile(
@@ -13,7 +13,7 @@ const createImage = async (req: express.Request) => {
     );
     const ext = req.image?.ext as unknown as AvailableFormatInfo;
 
-    sharp(readingfile)
+    return sharp(readingfile)
       .resize({
         width: req.image?.width,
         height: req.image?.height,

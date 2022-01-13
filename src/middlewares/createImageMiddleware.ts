@@ -6,10 +6,11 @@ import createImage from '../modules/createImage';
 //check for caching image
 // FIXME: return promise from create module
 
-const createImageMiddleware = function (req: express.Request, res: express.Response, next: express.NextFunction): void {
+const createImageMiddleware = async function (req: express.Request, res: express.Response, next: express.NextFunction) {
   if (!req.image?.isExist) {
-    createImage(req);
+    await createImage(req);
     const filePath = path.resolve(__dirname, `../../assets/thumbs/${req.image?.path}`);
+    console.log('Create New Image');
     // res.status(200).send('file exist');
     res.status(200).sendFile(filePath);
   }
