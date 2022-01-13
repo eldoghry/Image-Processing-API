@@ -11,9 +11,7 @@ interface imageObj {
 // TODO: search resize file first
 
 const resizeImage = async (image: imageObj) => {
-  console.log(__dirname);
   const readingfile = await fsPromises.readFile(`${__dirname}/../../assets/full/${image.filename}`);
-  console.log(image);
 
   sharp(readingfile)
     .resize({
