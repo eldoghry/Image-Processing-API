@@ -8,12 +8,26 @@ import createImage from '../modules/createImage';
 
 const createImageMiddleware = async function (req: express.Request, res: express.Response, next: express.NextFunction) {
   if (!req.image?.isExist) {
-    await createImage(req);
-    const filePath = path.resolve(__dirname, `../../assets/thumbs/${req.image?.path}`);
-    console.log('Create New Image');
-    // res.status(200).send('file exist');
-    res.status(200).sendFile(filePath);
+    try {
+      console.log('Will Create New Image');
+
+      //1) create File
+      await createImage(req);
+
+      //2) resolve file path
+      const filePath = path.resolve(`${path.resolve(process.env.THUMBS_DIR as string, req.image?.path as string)}`);
+
+      //3) return image
+      res.status(200).sendFile(filePath);
+    } catch (error: any) {
+      res.status(400).json({
+        status: 'fail',
+        message: error.message,
+        error,
+      });
+    }
   }
+
   next();
 };
 

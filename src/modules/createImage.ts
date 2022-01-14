@@ -1,35 +1,60 @@
-import sharp, { AvailableFormatInfo, FormatEnum, Sharp } from 'sharp';
-import { promises as fsPromises } from 'fs';
+import sharp, { AvailableFormatInfo } from 'sharp';
+import { promises as fsPromises, readFile } from 'fs';
 import express from 'express';
+import path from 'path';
 
-//TODO: check assets, full, thumbs dir first
+//TODO: check assets, full, thumbs dir first, error any
 // FIXME: refactor sharp
 
-const createImage = async (req: express.Request): Promise<void> => {
+const createSharpFile = async (
+  file: Buffer,
+  width: number,
+  height: number,
+  ext: AvailableFormatInfo,
+  newPath: string
+): Promise<void> => {
   try {
-    //read original file from full path
-
-    const readingfile = await fsPromises.readFile(
-      `${__dirname}/../../assets/full/${req.image?.filename}.${req.image?.ext}`
-    );
-    const ext = req.image?.ext as unknown as AvailableFormatInfo;
-
-    return sharp(readingfile)
+    await sharp(file)
       .resize({
-        width: req.image?.width,
-        height: req.image?.height,
+        width,
+        height,
       })
       .toFormat(ext)
       .toBuffer()
       .then(async (data) => {
-        await fsPromises.mkdir('./assets/thumbs', { recursive: true });
-        const file = await fsPromises.open(`${__dirname}/../../assets/thumbs/${req.image?.path}`, 'a+');
+        //1)ensure thumbs dir is exist
+        await fsPromises.mkdir(process.env.THUMBS_DIR as string, { recursive: true });
+
+        //2) create new resized image
+        const filePath = path.resolve(process.env.THUMBS_DIR as string, newPath);
+        const file = await fsPromises.open(filePath, 'a+');
         await file.write(data);
+
+        //3) close file to clean garbage collector
         file.close();
+
         console.log('file has been created');
       });
   } catch (error: unknown) {
+    throw error;
+  }
+};
+
+const createImage = async (req: express.Request): Promise<void> => {
+  try {
+    //1) read orginal image
+    const readingfile = await fsPromises.readFile(`${process.env.FULL_DIR}/${req.image?.filename}.${req.image?.ext}`);
+
+    const ext = req.image?.ext as unknown as AvailableFormatInfo;
+    const width = req.image?.width as number;
+    const height = req.image?.height as number;
+    const newPath = req.image?.path as string;
+
+    //2) create Sharp File
+    await createSharpFile(readingfile, width, height, ext, newPath);
+  } catch (error: unknown) {
     console.log(`⛔ ${error}`);
+    throw error;
   }
 };
 
