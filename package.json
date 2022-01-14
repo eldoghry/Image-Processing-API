@@ -8,7 +8,7 @@
     "lint": "eslint . --ext .ts",
     "build": "tsc",
     "start": "npx nodemon src/index.ts",
-    "jasmine": "jasmine"
+    "jasmine": "npm run build & jasmine"
   },
   "author": "Mohamed Magdy",
   "license": "ISC",
@@ -29,6 +29,7 @@
     "typescript": "^4.5.4"
   },
   "dependencies": {
+    "dotenv": "^11.0.0",
     "express": "^4.17.2",
     "jasmine": "^4.0.2",
     "jasmine-spec-reporter": "^7.0.0",

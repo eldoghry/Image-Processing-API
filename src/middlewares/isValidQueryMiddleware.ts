@@ -3,6 +3,8 @@ import express from 'express';
 //check if queries have valid values
 
 /* 
+idea: create custome image prorperty in request {}
+
 image object {
   filename: imageName,
   ext: 'jpg',
@@ -13,7 +15,7 @@ image object {
 */
 
 //filename and width are mandatory
-const isValidQuery = function (req: express.Request, res: express.Response, next: express.NextFunction): void {
+const isValidQueryMiddleware = function (req: express.Request, res: express.Response, next: express.NextFunction): void {
   const filename = req.query.filename as string;
   const width = +(req.query.width as unknown as number);
 
@@ -32,7 +34,11 @@ const isValidQuery = function (req: express.Request, res: express.Response, next
       isExist: false,
     };
     next();
-  } else res.status(400).send('BAD REQUEST: Check Endpoint Queries');
+  } else
+    res.status(400).json({
+      status: 'fail',
+      message: `Bad Request code ${res.statusCode}: Please check endpoint queries`,
+    });
 };
 
-export default isValidQuery;
+export default isValidQueryMiddleware;

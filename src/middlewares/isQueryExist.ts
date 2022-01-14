@@ -1,5 +1,5 @@
 import express from 'express';
-
+// delete me
 //check if there is query {} on the request
 
 const isQueryExist = function (req: express.Request, res: express.Response, next: express.NextFunction): void {

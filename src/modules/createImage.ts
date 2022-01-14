@@ -3,11 +3,12 @@ import { promises as fsPromises } from 'fs';
 import express from 'express';
 
 //TODO: check assets, full, thumbs dir first
-// TODO: search resize file first
+// FIXME: refactor sharp
 
 const createImage = async (req: express.Request): Promise<void> => {
   try {
     //read original file from full path
+
     const readingfile = await fsPromises.readFile(
       `${__dirname}/../../assets/full/${req.image?.filename}.${req.image?.ext}`
     );
@@ -21,6 +22,7 @@ const createImage = async (req: express.Request): Promise<void> => {
       .toFormat(ext)
       .toBuffer()
       .then(async (data) => {
+        await fsPromises.mkdir('./assets/thumbs', { recursive: true });
         const file = await fsPromises.open(`${__dirname}/../../assets/thumbs/${req.image?.path}`, 'a+');
         await file.write(data);
         file.close();
