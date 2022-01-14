@@ -5,30 +5,27 @@ import fs from 'fs';
 import express from 'express';
 import dotenv from 'dotenv';
 
-//Importing middlewares
-import isValidQueryMiddleware from './middlewares/isValidQueryMiddleware';
-import isNewImageMiddleware from './middlewares/isNewImageMiddleware';
-import createImageMiddleware from './middlewares/createImageMiddleware';
-
-// Global Config ----------------------------
+//Importing Routers
+import apiRouter from './routes/api/apiRouter';
+////////////////////////////////////////////////////////////////
+//Configrations ----------------------------
 dotenv.config();
 const app = express();
 const port = process.env.PORT || 3000;
-const middlewares = [isValidQueryMiddleware, isNewImageMiddleware, createImageMiddleware];
 
+// TODO: create assets dires
+////////////////////////////////////////////////////////////////
 //read template markup once when server is up
-const markup = fs.readFileSync(`${__dirname}/../templates/template.html`, 'utf-8');
+// const markup = fs.readFileSync(`${__dirname}/../templates/template.html`, 'utf-8');
+////////////////////////////////////////////////////////////////
+app.use('/api', apiRouter);
 
-// Routes Endpoints -----------------------------------
 //Root Endpoint
 app.get('/', (req, res) => {
   res.status(200).send('Welcome To Image Processing API');
 });
 
-//middlewares do everythings
-app.get('/api/images', middlewares, (req: express.Request, res: express.Response) => {});
-
-//handling unknown endpoints
+//Handling unknown endpoints
 app.all('*', (req, res) => {
   res.status(404).json({
     status: 'fail',
@@ -36,8 +33,7 @@ app.all('*', (req, res) => {
   });
 });
 
-console.log(app.locals.title);
-
+////////////////////////////////////////////////////////////////
 //listening server
 app.listen(port, () => {
   console.log(`Listening from http://localhost:${port}/`);
