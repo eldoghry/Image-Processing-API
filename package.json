@@ -7,8 +7,10 @@
     "prettier": "prettier --config .prettierrc.json {,!(node_modules)/**/}*.ts --write",
     "lint": "eslint . --ext .ts",
     "build": "tsc",
-    "start": "npx nodemon build/index.js",
-    "jasmine": "npm run build & jasmine"
+    "mon": "npx nodemon dist/index.js",
+    "start": "node dist/index.js",
+    "startjs": "npm run build & node dist/index.js",
+    "jasmine": "jasmine"
   },
   "author": "Mohamed Magdy",
   "license": "ISC",

@@ -8,12 +8,12 @@ export default (request: supertest.SuperTest<supertest.Test>) => {
     });
 
     it('string width is bad request', async () => {
-      const response = await request.get('/api/images?filename=fjord&width="200"&height=300');
+      const response = await request.get('/api/images?filename=test&width="200"&height=300');
       expect(response.statusCode).toEqual(400);
     });
 
     it('string height is bad request', async () => {
-      const response = await request.get('/api/images?filename=fjord&width=200&height="300"');
+      const response = await request.get('/api/images?filename=test&width=200&height="300"');
       expect(response.statusCode).toEqual(400);
     });
 

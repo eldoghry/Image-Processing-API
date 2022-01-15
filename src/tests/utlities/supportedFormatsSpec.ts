@@ -9,28 +9,28 @@ export default (request: supertest.SuperTest<supertest.Test>) => {
     });
 
     it('without extension, code 201', async () => {
-      const response = await request.get('/api/images?filename=fjord.jpg&width=200&height=300');
+      const response = await request.get('/api/images?filename=test.jpg&width=200&height=300');
       expect(response.statusCode).toEqual(201);
     });
 
     it('with JPG, code 201', async () => {
       await deleteThumbsDir();
-      const response = await request.get('/api/images?filename=fjord.jpg&width=200&height=300');
+      const response = await request.get('/api/images?filename=test.jpg&width=200&height=300');
       expect(response.statusCode).toEqual(201);
     });
 
     it('with JPEG, code 201', async () => {
-      const response = await request.get('/api/images?filename=fjord.jpeg&width=200&height=300');
+      const response = await request.get('/api/images?filename=test.jpeg&width=200&height=300');
       expect(response.statusCode).toEqual(201);
     });
 
     it('with PNG, code 201', async () => {
-      const response = await request.get('/api/images?filename=fjord.png&width=200&height=300');
+      const response = await request.get('/api/images?filename=test.png&width=200&height=300');
       expect(response.statusCode).toEqual(201);
     });
 
     it('with WEBP, code 201', async () => {
-      const response = await request.get('/api/images?filename=fjord.webp&width=200&height=300');
+      const response = await request.get('/api/images?filename=test.webp&width=200&height=300');
       expect(response.statusCode).toEqual(201);
     });
   });
