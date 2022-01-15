@@ -3,9 +3,8 @@ import express from 'express';
 //check if queries have valid values
 
 /* 
-idea: create custome image prorperty in request {}
 
-image object {
+image object shape {
   filename: imageName,
   ext: 'jpg',
   width: 200,
@@ -14,31 +13,47 @@ image object {
 }
 */
 
-//filename and width are mandatory
-const isValidQueryMiddleware = function (req: express.Request, res: express.Response, next: express.NextFunction): void {
-  const filename = req.query.filename as string;
-  const width = +(req.query.width as unknown as number);
+// idea: create custome image prorperty in express request {}
+const isValidQueryMiddleware = function (
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction
+): void {
+  try {
+    const filename = req.query.filename as string;
+    const width = +(req.query.width as unknown as number);
 
-  if (filename && width) {
-    const height = req.query.height ? +(req.query.height as unknown as number) : width;
-    let [name, ext] = filename.toLowerCase().split('.');
-    ext = ext ? ext : 'jpg';
+    if (!filename || !width) throw 'Bad Request!, Please check endpoint queries';
 
-    //added to custom type
-    req.image = {
-      filename: name,
-      width,
-      height,
-      ext,
-      path: `${name}-${width}X${height}.${ext}`,
-      isExist: false,
-    };
-    next();
-  } else
+    if (filename && width) {
+      const height = req.query.height ? +(req.query.height as unknown as number) : width;
+      const [name, ext] = filename.toLowerCase().split('.');
+      // console.log(ext, typeof ext);
+      // const newExt =  ext ? ext : 'jpg';
+
+      //extentions
+      const allowedFormats = process.env.IMG_FORMAT?.toLowerCase().split(',');
+
+      if (ext && !allowedFormats?.includes(ext)) throw 'Unsupported Image Extension';
+
+      //added to custom type
+      req.image = {
+        filename: name.toLowerCase(),
+        width,
+        height,
+        ext: ext || 'jpg',
+        path: `${name}-${width}X${height}.${ext || 'jpg'}`,
+        isExist: false,
+      };
+
+      next();
+    }
+  } catch (error: unknown) {
     res.status(400).json({
       status: 'fail',
-      message: `Bad Request code ${res.statusCode}: Please check endpoint queries`,
+      error,
     });
+  }
 };
 
 export default isValidQueryMiddleware;

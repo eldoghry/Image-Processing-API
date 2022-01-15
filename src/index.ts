@@ -1,6 +1,3 @@
-//Importing Core Modules
-import fs from 'fs';
-
 //Importing Modules
 import express from 'express';
 import dotenv from 'dotenv';
@@ -8,7 +5,6 @@ import createAssetDirectories from './modules/createAssetsDirectories';
 
 //Importing Routers
 import apiRouter from './routes/api/apiRouter';
-import path from 'path';
 ////////////////////////////////////////////////////////////////
 //Configrations ----------------------------
 
@@ -17,11 +13,8 @@ const app = express();
 const port = process.env.PORT || 3000;
 createAssetDirectories();
 
-console.log(path.resolve(process.env.THUMBS_DIR as string, 'magdy.jpg'));
+// console.log(path.resolve(process.env.THUMBS_DIR as string, 'magdy.jpg'));
 
-////////////////////////////////////////////////////////////////
-//read template markup once when server is up
-// const markup = fs.readFileSync(`${__dirname}/../templates/template.html`, 'utf-8');
 ////////////////////////////////////////////////////////////////
 app.use('/api', apiRouter);
 

@@ -9,6 +9,10 @@ const middlewares = [isValidQueryMiddleware, isNewImageMiddleware, createImageMi
 
 const apiRouter = express.Router();
 
-apiRouter.route('/images').get(middlewares, (req: express.Request, res: express.Response) => {});
+apiRouter.route('/images').get(middlewares, (req: express.Request, res: express.Response) => {
+  //middleware do everything
+});
+
+// apiRouter.route('/images').get(middlewares,()=>{});
 
 export default apiRouter;

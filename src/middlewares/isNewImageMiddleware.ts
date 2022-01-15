@@ -4,7 +4,10 @@ import path from 'path';
 
 // TODO: validate Path
 //check caching image
-//try to open & read file witout creating it from thumbs dir
+
+//Idea: read file witout creation from thumbs dir ?
+// Yes: return file
+// No: create it
 
 const isNewImageMiddleware = async function (
   req: express.Request,
@@ -12,20 +15,17 @@ const isNewImageMiddleware = async function (
   next: express.NextFunction
 ): Promise<void> {
   try {
-    
-    const file = await fsPromises.open(`./assets/thumbs/${req.image?.path}`, 'r');
-    
+    const filePath = path.resolve(`${path.resolve(process.env.THUMBS_DIR as string, req.image?.path as string)}`);
+    const file = await fsPromises.open(filePath, 'r');
+
     file.close();
 
     req.image!.isExist = true;
 
-    const filePath = path.resolve(__dirname, `../../assets/thumbs/${req.image?.path}`);
-    
-    console.log('Return existing image');
+    // console.log('Return existing image');
 
     res.status(200).sendFile(filePath);
   } catch (error) {
-    //not found ? create new, else send
     next();
   }
 };
