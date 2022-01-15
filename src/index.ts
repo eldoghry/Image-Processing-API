@@ -38,6 +38,3 @@ app.listen(port, () => {
 });
 
 export default app;
-
-//TODO: can accept filename and width only (done)
-//TODO: upload image to full asset directory from request
